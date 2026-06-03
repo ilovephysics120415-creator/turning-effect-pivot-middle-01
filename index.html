@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stability Simulator (1 Pivot, 2 Forces)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-mode">
+  <div class="glow-container">
+    <div class="glow-orb" id="orb-1"></div>
+    <div class="glow-orb" id="orb-2"></div>
+  </div>
+
+  <header class="app-header">
+    <div class="header-main">
+      <h1>Stability</h1>
+      <span class="badge">1 Pivot, 2 Forces</span>
+    </div>
+    <div class="syllabus-info">
+      <span>Physics Syllabus Code 6091</span>
+      <span class="topic-tag">Turning Effect of Forces</span>
+    </div>
+  </header>
+
+  <main class="app-container">
+    <!-- Left Section: Interactive controls & Gamification -->
+    <section class="control-panel card">
+      <div class="gamification-bar">
+        <div class="score-pill">
+          <span class="label">SCORE</span>
+          <span class="value" id="score-val">0</span>
+        </div>
+        <div class="streak-pill">
+          <span class="label">STREAK</span>
+          <span class="value" id="streak-val">🔥 0</span>
+        </div>
+        <div class="rank-pill">
+          <span class="label">RANK</span>
+          <span class="value" id="rank-val">Novice Physicist</span>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h2><span class="icon">⚡</span> Force & Distance Controls</h2>
+        
+        <!-- Force 1 (Left) -->
+        <div class="control-group left-force-group">
+          <div class="slider-header">
+            <label for="f1-range">Left Force (F₁)</label>
+            <span class="slider-value" id="f1-val">10 N</span>
+          </div>
+          <input type="range" id="f1-range" min="1" max="20" step="1" value="10">
+        </div>
+
+        <!-- Distance 1 (Left) -->
+        <div class="control-group left-dist-group">
+          <div class="slider-header">
+            <label for="d1-range">Left Distance (d₁)</label>
+            <span class="slider-value" id="d1-val">0.5 m</span>
+          </div>
+          <input type="range" id="d1-range" min="0.1" max="1.0" step="0.1" value="0.5">
+        </div>
+
+        <!-- Force 2 (Right) -->
+        <div class="control-group right-force-group">
+          <div class="slider-header">
+            <label for="f2-range">Right Force (F₂)</label>
+            <span class="slider-value" id="f2-val">10 N</span>
+          </div>
+          <input type="range" id="f2-range" min="1" max="20" step="1" value="10">
+        </div>
+
+        <!-- Distance 2 (Right) -->
+        <div class="control-group right-dist-group">
+          <div class="slider-header">
+            <label for="d2-range">Right Distance (d₂)</label>
+            <span class="slider-value" id="d2-val">0.5 m</span>
+          </div>
+          <input type="range" id="d2-range" min="0.1" max="1.0" step="0.1" value="0.5">
+        </div>
+
+        <button id="btn-randomise" class="glow-button btn-primary">
+          <span class="btn-icon">🎲</span> Randomise Scenario
+        </button>
+      </div>
+    </section>
+
+    <!-- Right Section: Simulation Canvas & Student Worksheets -->
+    <section class="simulation-panel">
+      <!-- Live Simulation Canvas -->
+      <div class="canvas-container card">
+        <div class="canvas-overlay">
+          <span id="state-badge" class="state-badge balanced">BALANCED</span>
+          <span id="structure-theme-badge" class="theme-badge">Neon Cyberpunk</span>
+        </div>
+        <canvas id="sim-canvas" width="800" height="400"></canvas>
+      </div>
+
+      <!-- Interactive Worksheet Question -->
+      <div class="worksheet card">
+        <h3><span class="icon">✏️</span> Moment Challenge</h3>
+        <p class="instruction-text">Calculate the clockwise and anticlockwise moments for the current configuration, then determine the state of the structure.</p>
+        
+        <form id="worksheet-form" autocomplete="off" onsubmit="return false;">
+          <div class="question-grid">
+            <div class="input-wrapper">
+              <label for="cw-moment-input">Clockwise Moment</label>
+              <div class="input-with-feedback">
+                <input type="text" id="cw-moment-input" placeholder="e.g. 5.0 N m" required>
+                <span class="feedback-indicator" id="cw-feedback"></span>
+              </div>
+            </div>
+
+            <div class="input-wrapper">
+              <label for="acw-moment-input">Anticlockwise Moment</label>
+              <div class="input-with-feedback">
+                <input type="text" id="acw-moment-input" placeholder="e.g. 5.0 N m" required>
+                <span class="feedback-indicator" id="acw-feedback"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="synthesis-sentence">
+            The structure is 
+            <select id="state-select" required>
+              <option value="" disabled selected>choose direction...</option>
+              <option value="turning clockwise">turning clockwise</option>
+              <option value="turning anticlockwise">turning anticlockwise</option>
+              <option value="balanced">balanced</option>
+            </select>
+            because the clockwise moment is 
+            <select id="comparison-select" required>
+              <option value="" disabled selected>choose comparison...</option>
+              <option value="greater than">greater than</option>
+              <option value="smaller than">smaller than</option>
+              <option value="equal to">equal to</option>
+            </select>
+            the anticlockwise moment.
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" id="btn-submit" class="glow-button btn-success">Check Answer</button>
+            <button type="button" id="btn-reveal" class="btn-secondary">Show Solution</button>
+          </div>
+        </form>
+
+        <div id="solution-box" class="solution-box hidden">
+          <h4><span class="icon">💡</span> Solution Key</h4>
+          <div class="solution-content">
+            <p><strong>Clockwise Moment (Right):</strong> <code id="sol-cw"></code></p>
+            <p><strong>Anticlockwise Moment (Left):</strong> <code id="sol-acw"></code></p>
+            <p><strong>Explanation:</strong> <span id="sol-explain"></span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>&copy; 2026 Singapore Government Secondary School Physics Simulation. Syllabus 6091.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
